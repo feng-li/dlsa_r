@@ -2,9 +2,12 @@ Package: dlsa
 Type: Package
 Title: Distributed Least square approximation
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: use the Distributed Least square approximation to get estimated parameter value of logistic regression.
+Authors@R: c(
+    person("Feng", "Li", role = "aut", email = "feng.li@cufe.edu.cn"),
+    person("Yanping", "Wang", role = c("cre", "ctb"), email = "2016310844@email.cufe.edu.cn"),
+    person("Xuening", "Zhu", role = "aut", email = "xueningzhu@fudan.edu.cn")
+    )
+Description: use the Distributed Least square approximation to get estimated parameter value.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
