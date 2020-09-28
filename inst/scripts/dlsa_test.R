@@ -80,7 +80,7 @@ Y = simu.Y(X, beta)
 XY = data.frame(cbind(X,Y))
 head(XY)
 
-#text the function
-library('dlsalog')
+# test the function
+library('dlsa')
 a <- dlsa.logistic(Y~.,XY,K = 5,lasso_func = 1)
 a
