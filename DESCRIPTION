@@ -1,0 +1,14 @@
+Package: dlsalog
+Type: Package
+Title: Distributed Least square approximation of logistic regression
+Version: 0.1.0
+Author: Who wrote it
+Maintainer: The package maintainer <yourself@somewhere.net>
+Description: use the Distributed Least square approximation to get estimated parameter value of logistic regression.
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.1
+Imports: lars, dplyr, pROC, tibble, stats, ggplot2, MASS, survival
+NeedsCompilation: no
+Packaged: 2020-09-27 14:22:51 UTC; verlikey
