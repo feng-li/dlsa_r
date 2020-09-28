@@ -1,4 +1,4 @@
-# `dlsa`: Distributed Least Square Approximation
+# `dlsa`: Distributed Least Squares Approximation
 
 ## Introduction
 
@@ -7,7 +7,7 @@ In this work, we develop a distributed least squares approximation (DLSA) method
 - The entire methodology has been implemented in Python for a de-facto standard Spark system available at [https://github.com/feng-li/dlsa](https://github.com/feng-li/dlsa). 
 - This package provides the conceptual demo in R.
 
-## Installations
+## Installation
 
 ```r
 devtools::install_github('feng-li/dlsa_r')
