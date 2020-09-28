@@ -62,14 +62,14 @@ dlsa.logistic <- function(formula, data, K, lasso_func = 1, alpha = 0.5,
                 geom_segment(aes(x = 1, xend = 0, y = 0, yend = 1), color="grey", linetype="dashed")
     dlsa_auc = auc(dlsa_roc)
 
-    z <- list( dlsa_result = list( dlsa_theta = dlsa_result$theta, dlsa_Sig_inv = dlsa_result$Sig_inv,
-                                   dlsa_theta_mat = dlsa_result$theta_mat,
-                                   dlsa_Sig_inv_list = dlsa_result$Sig_inv_list),
+    z <- list( result = list( theta = dlsa_result$theta, Sig_inv = dlsa_result$Sig_inv,
+                                   theta_mat = dlsa_result$theta_mat,
+                                   Sig_inv_list = dlsa_result$Sig_inv_list),
                las_result = list( beta.ols = las_result$beta.ols, beta.bic = las_result$beta.bic,
                                   beta.aic = las_result$beta.aic,
                                   aic = las_result$aic, bic = las_result$bic),
-               dlsa_predict = list( dlsa_predict = dlsa_predict$Yhat,dlsa_predict_plot = dlsa_predict_plot,
-                                    dlsa_roc_plot = dlsa_roc_plot, dlsa_auc = dlsa_auc ))
+               predict = list( predict = dlsa_predict$Yhat,plot = dlsa_predict_plot,
+                                    roc = dlsa_roc_plot, auc = dlsa_auc ))
 
   }else{
     dlsa_result = dlsa(X, Y, K, init.beta = init.beta, iter.max = iter.max, ind = ind)
@@ -83,11 +83,11 @@ dlsa.logistic <- function(formula, data, K, lasso_func = 1, alpha = 0.5,
                geom_segment(aes(x = 1, xend = 0, y = 0, yend = 1), color="grey", linetype="dashed")
     dlsa_auc = auc(dlsa_roc)
 
-    z <- list( dlsa_result = list( dlsa_theta = dlsa_result$theta, dlsa_Sig_inv = dlsa_result$Sig_inv,
-                                   dlsa_theta_mat = dlsa_result$theta_mat,
-                                   dlsa_Sig_inv_list = dlsa_result$Sig_inv_list),
-               dlsa_predict = list( dlsa_predict = dlsa_predict$Yhat,dlsa_predict_plot = dlsa_predict_plot,
-                                    dlsa_roc_plot = dlsa_roc_plot, dlsa_auc = dlsa_auc ) )
+    z <- list( result = list( theta = dlsa_result$theta, Sig_inv = dlsa_result$Sig_inv,
+                              theta_mat = dlsa_result$theta_mat,
+                              Sig_inv_list = dlsa_result$Sig_inv_list),
+               predict = list( predict = dlsa_predict$Yhat,plot = dlsa_predict_plot,
+                               roc = dlsa_roc_plot, auc = dlsa_auc ) )
   }
 
   z
