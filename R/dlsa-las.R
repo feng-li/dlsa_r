@@ -1,4 +1,3 @@
-
 ###################################
 ## dlsa function
 ## K is number of workers
@@ -7,26 +6,26 @@ dlsa<-function(X, Y, K, fit_fun, ind = NULL, ...)
   # data dimension
   p = ncol(X)
   N = nrow(X)
-  
+
   # split the data
   if (is.null(ind))
   {
     ind = rep(1:K, each = floor(N/K))
   }
-  
+
   # conduct the function in parallel
   Sig_inv_list = list()
   Sig_inv_theta_list = list()
-  
+
   theta_mat = matrix(0, nrow = p, ncol = K)
   for (k in 1:K)
   {
-    
-    lr_k = fit_fun(X = X[ind==k,], Y = Y[ind==k], ...)  
+
+    lr_k = fit_fun(X = X[ind==k,], Y = Y[ind==k], ...)
     Sig_inv_list[[k]] = lr_k$Sig_inv
     Sig_inv_theta_list[[k]] = lr_k$Sig_inv%*%lr_k$theta
     theta_mat[,k] = lr_k$theta
-    
+
   }
   Sig_inv_sum = Reduce("+", Sig_inv_list)
   Sig_inv_theta_sum = Reduce("+", Sig_inv_theta_list)
@@ -44,10 +43,10 @@ lars.lsa <- function (Sigma0, b0, intercept,  n,
   type <- match.arg(type)
   b0 = as.vector(b0)
   TYPE <- switch(type, lasso = "LASSO", lar = "LAR")
-  
+
   #"LASSO"
   n1 <- dim(Sigma0)[1]
-  
+
   ## handle intercept处理拦截
   if (intercept) {
     a11 <- Sigma0[1,1]
@@ -63,11 +62,11 @@ lars.lsa <- function (Sigma0, b0, intercept,  n,
   }
   Sigma <- diag(abs(b))%*%Sigma%*%diag(abs(b))
   b <- sign(b)
-  
+
   nm <- dim(Sigma)
   m <- nm[2]
   im <- inactive <- seq(m)
-  
+
   Cvec <- drop(t(b)%*%Sigma)
   ssy <- sum(Cvec*b)
   if (missing(max.steps))
@@ -85,7 +84,7 @@ lars.lsa <- function (Sigma0, b0, intercept,  n,
   R <- NULL
   k <- 0
   ignores <- NULL
-  
+
   while ((k < max.steps) & (length(active) < m)) {
     action <- NULL
     k <- k + 1
@@ -120,7 +119,7 @@ lars.lsa <- function (Sigma0, b0, intercept,  n,
     dropouts <- NULL
     A <- 1/sqrt(sum(Gi1 * Sign))
     w <- A * Gi1
-    
+
     if (length(active) >= m) {
       gamhat <- Cmax/A
     }
@@ -143,10 +142,10 @@ lars.lsa <- function (Sigma0, b0, intercept,  n,
     }
     beta[k + 1, ] <- beta[k, ]
     beta[k + 1, active] <- beta[k + 1, active] + gamhat * w
-    
+
     Cvec <- Cvec - gamhat * Sigma[, active, drop = FALSE] %*% w
     Gamrat <- c(Gamrat, gamhat/(Cmax/A))
-    
+
     arc.length <- c(arc.length, gamhat)
     if (type == "lasso" && any(drops)) {
       dropid <- seq(drops)[drops]
@@ -158,21 +157,21 @@ lars.lsa <- function (Sigma0, b0, intercept,  n,
       active <- active[!drops]
       Sign <- Sign[!drops]
     }
-    
+
     actions[[k]] <- action
     inactive <- im[-c(active)]
   }
   beta <- beta[seq(k + 1), ]
-  
+
   dff <- b-t(beta)
-  
+
   RSS <- diag(t(dff)%*%Sigma%*%dff)
-  
+
   if(intercept)
     beta <- t(abs(b0[2:n1])*t(beta))
   else
     beta <- t(abs(b0)*t(beta))
-  
+
   if (intercept) {
     beta0 <- as.vector(beta0)-drop(t(a12)%*%t(beta))/a11
   }
@@ -213,7 +212,7 @@ lsa.distribute<-function(theta_mat, Sig_inv_list, intercept = 1, sample_size)
   }
   Sig_inv = Reduce("+", Sig_inv_list)
   beta.ols = solve(Sig_inv)%*%Reduce("+", Sig_inv_theta_list)
-  
+
   l.fit = lars.lsa(Sig_inv, beta.ols, intercept = intercept, n = sample_size)
   t1 <- sort(l.fit$BIC, ind=T)
   t2 <- sort(l.fit$AIC, ind=T)
@@ -232,9 +231,9 @@ lsa.distribute<-function(theta_mat, Sig_inv_list, intercept = 1, sample_size)
     bic = min(l.fit$BIC)
     aic = min(l.fit$AIC)
   }
-  
+
   obj <- list(beta.ols=beta.ols, beta.bic=beta.bic, beta.aic = beta.aic,
               aic = aic, bic = bic)
   obj
-  
+
 }
