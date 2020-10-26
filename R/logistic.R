@@ -1,5 +1,10 @@
-#####################################
-##create the fit function
+#' The example of logistic fit function
+#'
+#' @param X design matrix of dimension n * p.
+#' @param Y vector of observations of length n, or a matrix with n rows.
+#' @param init.beta initial beta values for the logistic regression.
+#' @param iter.max max iterate times for the logistic regression.
+#' @return A list of the estimated beta and hess matrix.
 logistic_fit <- function(X, Y, init.beta = NULL, iter.max = NULL)
 {
   N = nrow(X)
@@ -36,8 +41,13 @@ logistic_fit <- function(X, Y, init.beta = NULL, iter.max = NULL)
   return(list(theta = beta, Sig_inv = hess))
 }
 
-###################################
-##create the predict function
+
+#' The example of logistic predict function
+#'
+#' @param X design matrix of dimension n * p.
+#' @param theta the estimated value of beta.
+#' @param alpha the critical point to obtain Yhat from Fitted result.
+#' @return A list of the product of x and beta, probability and estimated value of observations.
 logistic_pred <- function(X, theta, alpha)
 {
   xtheta = X %*% theta
@@ -54,8 +64,11 @@ logistic_pred <- function(X, theta, alpha)
 }
 
 
-#################################
-#create the plot_fun
+#' The example of plot function
+#'
+#' @param x the coordinates of points in the plot.
+#' @param y the y coordinates of points in the plot.
+#' @return the plot result.
 plot_fun <- function(x,y){
   plot = ggplot()+
     geom_point(mapping = aes(x = x, y = y))
@@ -63,7 +76,15 @@ plot_fun <- function(x,y){
 }
 
 
-## the simulator for covariates X
+#' the simulator function for covariates X
+#'
+#' @param N the row dimension of simulated X.
+#' @param p the column dimension of simulated X.
+#' @param K number of workers.
+#' @param iid logical. whether the simulated X obey independently identically distribution or not.
+#' @return the simulated X values.
+#' @import MASS
+#' @import survival
 logistic_simuX<-function(N, p, K, iid = T)
 {
   if (iid)
@@ -83,7 +104,13 @@ logistic_simuX<-function(N, p, K, iid = T)
   return(X)
 }
 
-## simulate the Y according to regression model
+
+#' the simulator function to simulate the Y according to regression model
+#'
+#' @param X design matrix of dimension n * p.
+#' @param beta the beta value of regression.
+#' @param reg_type the type of regression.
+#' @return the simulated Y values.
 logistic_simuY<-function(X, beta, reg_type = "logistic")
 {
   if (reg_type == "logistic")

@@ -1,6 +1,12 @@
-###################################
-## dlsa function
-## K is number of workers
+#' The main function of distributed least square approximation to get the estimated beta and hess matrix
+#'
+#' @param X design matrix of dimension n * p.
+#' @param Y vector of observations of length n, or a matrix with n rows.
+#' @param K number of workers
+#' @param fit_fun user-submitted fitting function.
+#' @param ind the rule to split the data to workers.
+#' @param ... optional arguments to fit_fun
+#' @return A list of the estimated beta and hess matrix.
 dlsa<-function(X, Y, K, fit_fun, ind = NULL, ...)
 {
   # data dimension
@@ -34,8 +40,16 @@ dlsa<-function(X, Y, K, fit_fun, ind = NULL, ...)
               theta_mat = theta_mat, Sig_inv_list = Sig_inv_list))
 }
 
-###################################
-## lars variant for LSA
+
+#' lars variant for LSA
+#'
+#' @param Sigma0 the initial value of Sigma Inverse.
+#' @param b0 the initial value of beta.
+#' @param intercept logical. Should an intercept be included in the null model?
+#' @param n size of the data. 
+#' @param type the calculate type.
+#' @param eps the threshold value of convergence.
+#' @return A list of the estimated beta and value of AIC, BIC.
 lars.lsa <- function (Sigma0, b0, intercept,  n,
                       type = c("lasso", "lar"),
                       eps = .Machine$double.eps,max.steps)
@@ -47,7 +61,7 @@ lars.lsa <- function (Sigma0, b0, intercept,  n,
   #"LASSO"
   n1 <- dim(Sigma0)[1]
 
-  ## handle intercept处理拦截
+  ## handle intercept
   if (intercept) {
     a11 <- Sigma0[1,1]
     a12 <- Sigma0[2:n1,1]
@@ -187,20 +201,13 @@ lars.lsa <- function (Sigma0, b0, intercept,  n,
 }
 
 
-
-###################################
-## Least square approximation. This version May, 2019
-## Reference Wang, H. and Leng, C. (2006)
-## Rewritten by Xuening Zhu
-## Comments and suggestions are welcome
-##
-## Input
-## distributed Sigma Inverse and estiamtors
-##
-## Output
-## beta.ols: the MLE estimate
-## beta.bic: the LSA-BIC estimate
-## beta.aic: the LSA-AIC estimate
+#' The least square approximation
+#'
+#' @param theta_mat the distributed estiamtors.
+#' @param Sig_inv_list the distributed Sigma Inverse.
+#' @param intercept logical. Should an intercept be included in the null model?
+#' @param sample_size size of the data.
+#' @return A list of the MLE, LSA-BIC and LSA-AIC estimate of beta and the value of AIC, BIC.
 
 lsa.distribute<-function(theta_mat, Sig_inv_list, intercept = 1, sample_size)
 {
