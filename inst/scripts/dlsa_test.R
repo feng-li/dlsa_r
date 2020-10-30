@@ -10,7 +10,7 @@ p = length(beta)
 N = 10000
 set.seed(1234)
 X = logistic_simuX(N, p, K = 5,iid=T)
-Y = logistic_imuY(X, beta)
+Y = logistic_simuY(X, beta)
 XY = data.frame(cbind(X,Y))
 X = data.frame(X)
 head(XY)
