@@ -7,32 +7,40 @@
 #' @param ind the rule to split the data to workers.
 #' @param ... optional arguments to fit_fun
 #' @return A list of the estimated beta and hess matrix.
+#' @import foreach
+#' @import doParallel
 dlsa<-function(X, Y, K, fit_fun, ind = NULL, ...)
 {
   # data dimension
   p = ncol(X)
   N = nrow(X)
-
+  
   # split the data
   if (is.null(ind))
   {
-    ind = rep(1:K, each = floor(N/K))
+    ind = rep(1:(K-1), each = floor(N/K))
+    ind = c(ind, rep(K, N-floor(N/K)*(K-1)))
   }
-
-  # conduct the function in parallel
+  
+  # Parallel Computing
+  cl <- makeCluster(K)
+  registerDoParallel(cl)
+  fit_res <- foreach(i=1:K) %dopar% fit_fun(X = X[ind==i,], Y = Y[ind==i], ...)
+  stopImplicitCluster()
+  stopCluster(cl)
+  
+  # get the result
   Sig_inv_list = list()
   Sig_inv_theta_list = list()
-
   theta_mat = matrix(0, nrow = p, ncol = K)
-  for (k in 1:K)
+  
+  for (i in 1:length(fit_res))
   {
-
-    lr_k = fit_fun(X = X[ind==k,], Y = Y[ind==k], ...)
-    Sig_inv_list[[k]] = lr_k$Sig_inv
-    Sig_inv_theta_list[[k]] = lr_k$Sig_inv%*%lr_k$theta
-    theta_mat[,k] = lr_k$theta
-
+    Sig_inv_list[[i]] = fit_res[[i]]$Sig_inv
+    Sig_inv_theta_list[[i]] = fit_res[[i]]$Sig_inv%*%fit_res[[i]]$theta
+    theta_mat[,i] = fit_res[[i]]$theta
   }
+  
   Sig_inv_sum = Reduce("+", Sig_inv_list)
   Sig_inv_theta_sum = Reduce("+", Sig_inv_theta_list)
   theta = solve(Sig_inv_sum)%*%Sig_inv_theta_sum
@@ -244,3 +252,4 @@ lsa.distribute<-function(theta_mat, Sig_inv_list, intercept = 1, sample_size)
   obj
 
 }
+

@@ -8,6 +8,8 @@
 #' @param ... optional arguments to pred_fun
 #' @return A list of the estimated value of dependent variable and other output of the pred_fun
 #' @importFrom tibble as.tibble
+#' @import foreach
+#' @import doParallel
 #' @export
 #' @examples
 #' # Not Run
@@ -19,20 +21,23 @@ dlsa.pred <- function(X, theta, K, pred_fun, ind = NULL, ...)
   N = nrow(X)
   if (is.null(ind))
   {
-    ind = rep(1:K, each = floor(N/K))
+    ind = rep(1:(K-1), each = floor(N/K))
+    ind = c(ind, rep(K, N-floor(N/K)*(K-1)))
   }
   
-  Yhat = list()
-  result = list()
+  # Parallel Computing
+  cl <- makeCluster(K)
+  registerDoParallel(cl)
+  pred_res <- foreach(i=1:K) %dopar% pred_fun(X = X[ind==i,], theta, ...)
+  stopImplicitCluster()
+  stopCluster(cl)
   
-  for (k in 1:K){
-    
-    pred_result = pred_fun(X[ind==k,], theta, ...)
-    Yhat[[k]] = pred_result$yhat
-    result[[k]] = pred_result
-    
+  # get the result
+  Yhat = list()
+  for (k in 1:length(pred_res)){
+    Yhat[[k]] = pred_res[[k]]$yhat
   }
   
   Yhat = as.vector(unlist(Yhat))
-  return(list(Yhat = Yhat, result = result))
+  return(list(Yhat = Yhat, result = pred_res))
 }
