@@ -33,11 +33,7 @@ dlsa.pred <- function(X, theta, K, pred_fun, ind = NULL, ...)
   stopCluster(cl)
   
   # get the result
-  Yhat = list()
-  for (k in 1:length(pred_res)){
-    Yhat[[k]] = pred_res[[k]]$yhat
-  }
+  Yhat = as.vector(unlist(lapply(res$result,extrac_yhat)))
   
-  Yhat = as.vector(unlist(Yhat))
   return(list(Yhat = Yhat, result = pred_res))
 }

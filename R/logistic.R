@@ -5,6 +5,7 @@
 #' @param init.beta initial beta values for the logistic regression.
 #' @param iter.max max iterate times for the logistic regression.
 #' @return A list of the estimated beta and hess matrix.
+#' @export
 logistic_fit <- function(X, Y, init.beta = NULL, iter.max = NULL)
 {
   N = nrow(X)
@@ -48,6 +49,7 @@ logistic_fit <- function(X, Y, init.beta = NULL, iter.max = NULL)
 #' @param theta the estimated value of beta.
 #' @param alpha the critical point to obtain Yhat from Fitted result.
 #' @return A list of the product of x and beta, probability and estimated value of observations.
+#' @export
 logistic_pred <- function(X, theta, alpha)
 {
   xtheta = X %*% theta
@@ -69,7 +71,8 @@ logistic_pred <- function(X, theta, alpha)
 #' @param x the coordinates of points in the plot.
 #' @param y the y coordinates of points in the plot.
 #' @return the plot result.
-plot_fun <- function(x,y){
+#' @export
+logistic_plot <- function(x,y){
   plot = ggplot()+
     geom_point(mapping = aes(x = x, y = y))
   return(plot)
@@ -85,6 +88,7 @@ plot_fun <- function(x,y){
 #' @return the simulated X values.
 #' @import MASS
 #' @import survival
+#' @export
 logistic_simuX<-function(N, p, K, iid = T)
 {
   if (iid)
@@ -111,6 +115,7 @@ logistic_simuX<-function(N, p, K, iid = T)
 #' @param beta the beta value of regression.
 #' @param reg_type the type of regression.
 #' @return the simulated Y values.
+#' @export
 logistic_simuY<-function(X, beta, reg_type = "logistic")
 {
   if (reg_type == "logistic")
