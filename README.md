@@ -13,12 +13,15 @@ In this work, we develop a distributed least squares approximation (DLSA) method
 devtools::install_github('feng-li/dlsa_r')
 ```
 
-## Vignette 
+## Quick start 
 
 ```r
 require("dlsa")
 source(system.file("scripts/dlsa_test.R", package="dlsa"))
 ```
+## Implement distributed models
+
+Our method is general and can be used for other models, one only need to specify a fitting function and a predict function. See the [source code of logistic function](https://github.com/feng-li/dlsa_r/blob/master/R/logistic.R) for details.
 
 
 ## References
