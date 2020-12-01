@@ -1,3 +1,5 @@
+require("parallel")
+require("dplyr")
 
 ## Load the data: create simulate numbers
 beta = c(3, 0, 0, 1.5, 0, 0, 2, 0)
