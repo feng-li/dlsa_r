@@ -17,7 +17,7 @@ devtools::install_github('feng-li/dlsa_r')
 
 ```r
 require("dlsa")
-source(system.file("scripts/dlsa_test.R", package = "dlsa"), verbose = TRUE)
+source(system.file("scripts/dlsa_test.R", package = "dlsa"), echo = TRUE)
 ```
 ## Implement distributed models
 
